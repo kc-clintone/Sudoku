@@ -1,60 +1,45 @@
 package main
 
-import "github.com/01-edu/z01"
+import (
+        "github.com/01-edu/z01"
+)
 
-// Define the point struct
-type point struct {
-	x int
-	y int
+func setPoint(ptrx, ptry *int) {
+        *ptrx = 42
+        *ptry = 21
 }
 
-// Function to set the values of the point
-func setPoint(ptr *point) {
-	ptr.x = 42
-	ptr.y = 21
-}
+func printNb(nb int) {
+        var reste int
+        var tab []int
 
-// Function to print a string using z01.PrintRune
-func printStr(s string) {
-	for _, r := range s {
-		z01.PrintRune(r)
-	}
-}
-
-// Function to print an integer using z01.PrintRune
-func printInt(n int) {
-	if n == 0 {
-		z01.PrintRune('0')
-		return
-	}
-	if n < 0 {
-		z01.PrintRune('-')
-		n = -n
-	}
-
-	var digits []rune
-	for n > 0 {
-		digits = append([]rune{rune('0' + n%10)}, digits...)
-		n /= 10
-	}
-	for _, d := range digits {
-		z01.PrintRune(d)
-	}
+        for nb > 0 {
+                reste = nb % 10
+                tab = append(tab, reste)
+                nb /= 10
+        }
+        for i := len(tab) - 1; i >= 0; i-- {
+                z01.PrintRune(rune(int(tab[i]) + 48))
+        }
 }
 
 func main() {
-	// Initialize a pointer to a point struct
-	points := &point{}
+        var x int
+        var y int
 
-	// Set the values of the point using setPoint
-	setPoint(points)
+        setPoint(&x, &y)
 
-	// Print the values of x and y
-	printStr("x = ")
-	printInt(points.x)
-	z01.PrintRune(',')
-	z01.PrintRune(' ')
-	printStr("y = ")
-	printInt(points.y)
-	z01.PrintRune('\n')
+        z01.PrintRune('x')
+        z01.PrintRune(' ')
+        z01.PrintRune('=')
+        z01.PrintRune(' ')
+        printNb(x)
+        z01.PrintRune(',')
+        z01.PrintRune(' ')
+        z01.PrintRune('y')
+        z01.PrintRune(' ')
+        z01.PrintRune('=')
+        z01.PrintRune(' ')
+        printNb(y)
+        z01.PrintRune('\n')
 }
