@@ -1,0 +1,123 @@
+package main
+
+import (
+	"bufio"
+	"os"
+	"sort"
+	"strconv"
+	"strings"
+	"github.com/01-edu/z01"
+)
+
+func main() {
+	scanner := bufio.NewScanner(os.Stdin)
+	var inputLines []string
+
+	// Read input from stdin
+	for scanner.Scan() {
+		inputLines = append(inputLines, scanner.Text())
+	}
+
+	// If no input, return "Not a quad function"
+	if len(inputLines) == 0 {
+		printString("Not a quad function\n")
+		return
+	}
+
+	// Determine width and height of input
+	input := strings.Join(inputLines, "\n")
+	width := len(inputLines[0])
+	height := len(inputLines)
+
+	var matches []string
+
+	// Map of quad functions
+	quads := map[string]func(int, int) string{
+		"QuadA": QuadA,
+		"QuadB": QuadB,
+		"QuadC": QuadC,
+		"QuadD": QuadD,
+		"QuadE": QuadE,
+	}
+
+	// Check only the detected width and height
+	for name, fn := range quads {
+		if fn(width, height) == input {
+			matches = append(matches, formatMatch(name, width, height))
+		}
+	}
+
+	// Print results
+	if len(matches) == 0 {
+		printString("Not a quad function\n")
+	} else {
+		sort.Strings(matches)
+		printString(strings.Join(matches, " || ") + "\n")
+	}
+}
+
+// Corrected function: Convert width and height properly using strconv.Itoa
+func formatMatch(name string, width, height int) string {
+	return "[" + name + "] [" + strconv.Itoa(width) + "] [" + strconv.Itoa(height) + "]"
+}
+
+// Function to print a string using z01.PrintRune
+func printString(s string) {
+	for _, r := range s {
+		z01.PrintRune(r)
+	}
+}
+
+// QuadA generates a pattern with 'o', '-', '|'
+func QuadA(width, height int) string {
+	return generateQuad(width, height, 'o', 'o', 'o', 'o', '-', '|', ' ')
+}
+
+// QuadB generates a pattern with '/', '*', '\\'
+func QuadB(width, height int) string {
+	return generateQuad(width, height, '/', '\\', '\\', '/', '*', '*', ' ')
+}
+
+// QuadC generates a pattern with 'A', 'C'
+func QuadC(width, height int) string {
+	return generateQuad(width, height, 'A', 'A', 'C', 'C', 'B', 'B', ' ')
+}
+
+// QuadD generates a different pattern with 'A', 'C'
+func QuadD(width, height int) string {
+	return generateQuad(width, height, 'A', 'C', 'A', 'C', 'B', 'B', ' ')
+}
+
+// QuadE generates a different pattern with 'A', 'C'
+func QuadE(width, height int) string {
+	return generateQuad(width, height, 'A', 'C', 'C', 'A', 'B', 'B', ' ')
+}
+
+// Helper function to generate quad patterns
+func generateQuad(width, height int, tl, tr, bl, br, h, v, fill rune) string {
+	var result []rune
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			switch {
+			case x == 0 && y == 0:
+				result = append(result, tl) // Top-left corner
+			case x == width-1 && y == 0:
+				result = append(result, tr) // Top-right corner
+			case x == 0 && y == height-1:
+				result = append(result, bl) // Bottom-left corner
+			case x == width-1 && y == height-1:
+				result = append(result, br) // Bottom-right corner
+			case y == 0 || y == height-1:
+				result = append(result, h) // Horizontal edges
+			case x == 0 || x == width-1:
+				result = append(result, v) // Vertical edges
+			default:
+				result = append(result, fill) // Inner fill
+			}
+		}
+		if y < height-1 {
+			result = append(result, '\n')
+		}
+	}
+	return string(result)
+}
