@@ -28,17 +28,17 @@ func main() {
 		return
 	}
 
-	var matches []string
+	var pattern_matches []string
 	for name, pattern := range quads {
 		if match(input, pattern) {
-			matches = append(matches, fmt.Sprintf("[%s] [%d] [%d]", name, len(input[0]), len(input)))
+			pattern_matches = append(pattern_matches, fmt.Sprintf("[%s] [%d] [%d]", name, len(input[0]), len(input)))
 		}
 	}
 
-	if len(matches) == 0 {
+	if len(pattern_matches) == 0 {
 		fmt.Println("Not a quad function")
 	} else {
-		sort.Strings(matches)
+		sort.Strings(pattern_matches)
 		fmt.Println(strings.Join(matches, " || "))
 	}
 }
